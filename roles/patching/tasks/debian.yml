@@ -1,0 +1,19 @@
+- name: Update all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Reboot Server
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+
+- name: Wair for 10 seconds
+  pause:
+    seconds: 10
+
+- name: Wait for System to reboot
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 60

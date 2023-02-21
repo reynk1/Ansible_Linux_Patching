@@ -1,0 +1,34 @@
+- name: check for updates (yum)
+  yum: 
+    list=updates update_cache=true
+  become: true
+  register: yumoutput
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Check for avalible updates
+  apt:
+    upgrade: dist
+    update_cache: yes
+  check_mode: yes
+  become: true
+  register: aptoutput
+  when: ansible_distribution == 'Debian'
+
+# - debug:
+#     var: ansible_distribution
+
+# - debug:
+#     var: yumoutput.results
+
+# - debug:
+#     var: aptoutput.stdout | length 
+
+- name: Install Centos Updates
+  import_tasks: centos.yml
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  become: true
+
+- name: Install Debian Updates
+  import_tasks: debian.yml
+  when: aptoutput.stdout | length > 315
+  become: true

@@ -1,0 +1,6 @@
+- name: Install Updates
+  hosts: all
+
+  tasks:
+    - import_role:
+        name: patching
